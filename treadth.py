@@ -1,4 +1,4 @@
-import _thread, time, sys, serial, Ice, Demo
+import _thread, time, sys, serial, Ice, Comunication
 
 from threading import Thread, Event, Lock
 
@@ -15,21 +15,21 @@ class comunication():
          if response is not None:
 
             with Ice.initialize(sys.argv) as communicator:
-               base = communicator.stringToProxy("SimplePrinter:default -p 12000")
+               base = communicator.stringToProxy("SimplePrinter:default -p 11000")
                # torre base = communicator.stringToProxy("SimplePrinter:tcp -h 25.89.209.150 -p 12000")
                # mac base = communicator.stringToProxy("SimplePrinter:tcp -h 25.5.222.9 -p 12000")
-               printer = Demo.PrinterPrx.checkedCast(base)
+               com_bilateral = Comunication.BirateralPrx.checkedCast(base)
 
-               if not printer:
+               if not com_bilateral:
                   raise RuntimeError("Invalid proxy")
 
                # envio de los datos de sensoires
                # manda los valorores de los sensores por mediop de comunicacion serial con un foramto on@12@34
-               printer.printString(str(response)[2:][:-5])
+               com_bilateral.comunicationBilateral(str(response)[2:][:-5])
                print(str(response)[2:][:-5])
-               print(str(printer.printString("")).encode())
+               print(str(com_bilateral.comunicationBilateral("")).encode())
                # recive el dato y lo pasa a la placa por convercion a byte para la comunicacion serial
-               global_ser.write(str(printer.printString("")).encode())
+               global_ser.write(str(com_bilateral.comunicationBilateral("")).encode())
 
 
 class main():

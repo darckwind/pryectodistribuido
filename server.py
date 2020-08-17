@@ -1,10 +1,10 @@
-import sys, Ice, time, Demo
+import sys, Ice, time, Comunication
 from threading import Thread, Event, Lock
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 
-class PrinterI(Demo.Printer):
+class PrinterI(Comunication.Birateral):
     action = False
     stop_threads = False
     def __init__(self):
@@ -16,7 +16,7 @@ class PrinterI(Demo.Printer):
         print(self.action)
 
 
-    def printString(self, s,current=None):
+    def comunicationBilateral(self, s,current=None):
         self.data = s
         print(self.action)
         Display.updateLCD(self.data)
@@ -29,7 +29,7 @@ class PrinterI(Demo.Printer):
     @staticmethod
     def connector():
         with Ice.initialize(sys.argv) as communicator:
-            adapter = communicator.createObjectAdapterWithEndpoints("SimplePrinterAdapter", "default -p 12000")
+            adapter = communicator.createObjectAdapterWithEndpoints("SimplePrinterAdapter", "default -p 11000")
             object = PrinterI()
             adapter.add(object, communicator.stringToIdentity("SimplePrinter"))
             adapter.activate()
