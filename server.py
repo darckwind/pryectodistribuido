@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 
 class PrinterI(Demo.Printer):
     action = False
+    stop_threads = False
     def __init__(self):
         super().__init__()
         self.data=""
@@ -33,6 +34,12 @@ class PrinterI(Demo.Printer):
             adapter.add(object, communicator.stringToIdentity("SimplePrinter"))
             adapter.activate()
             communicator.waitForShutdown()
+    @staticmethod
+    def starter():
+        PrinterI.connector()
+        while True:
+            if PrinterI.stop_threads:
+                break
 
 class Display(QWidget):
 
@@ -42,8 +49,8 @@ class Display(QWidget):
         self.setWindowTitle("Monitor")
         self.button = QPushButton("Launch")
         self.lable_temp_cam = QLabel("Temperatura Camara")
-        self.lable_hume_ham = QLabel("Humedad Hambiente")
-        self.lable_temp_ham = QLabel("Temperatura Hambiente")
+        self.lable_hume_ham = QLabel("Humedad Ambiente")
+        self.lable_temp_ham = QLabel("Temperatura Ambiente")
         self.button = QPushButton("Launch")
         self.button_stop = QPushButton("Stop")
 
@@ -75,7 +82,10 @@ class Display(QWidget):
 
 
 if __name__ == '__main__':
-    tc = Thread(target=PrinterI.connector)
+
+
+
+    tc = Thread(target=PrinterI.starter,daemon=True)
     tc.start()
 
     app = QApplication(sys.argv)
@@ -85,4 +95,6 @@ if __name__ == '__main__':
 
     demo = Display()
     demo.show()
-    sys.exit(app.exec_())
+    if app.exec_() == 0:
+        PrinterI().stop_threads = True
+        sys.exit(app.exec_())
