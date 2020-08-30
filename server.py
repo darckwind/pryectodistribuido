@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 
-class PrinterI(Comunication.Birateral):
+class SliceCoonection(Comunication.Birateral):
     action = False
     stop_threads = False
     def __init__(self):
@@ -12,7 +12,7 @@ class PrinterI(Comunication.Birateral):
         self.data=""
 
     def set_action(self,comand):
-        PrinterI.action = comand
+        SliceCoonection.action = comand
         print(self.action)
 
 
@@ -30,15 +30,15 @@ class PrinterI(Comunication.Birateral):
     def connector():
         with Ice.initialize(sys.argv) as communicator:
             adapter = communicator.createObjectAdapterWithEndpoints("SimplePrinterAdapter", "default -p 11000")
-            object = PrinterI()
+            object = SliceCoonection()
             adapter.add(object, communicator.stringToIdentity("SimplePrinter"))
             adapter.activate()
             communicator.waitForShutdown()
     @staticmethod
     def starter():
-        PrinterI.connector()
+        SliceCoonection.connector()
         while True:
-            if PrinterI.stop_threads:
+            if SliceCoonection.stop_threads:
                 break
 
 class Display(QWidget):
@@ -75,17 +75,17 @@ class Display(QWidget):
             lcd_temp_camara.display(str(event).split("@")[2])
 
     def launch(self):
-        PrinterI().set_action(True)
+        SliceCoonection().set_action(True)
 
     def stop_launch(self):
-        PrinterI().set_action(False)
+        SliceCoonection().set_action(False)
 
 
 if __name__ == '__main__':
 
 
 
-    tc = Thread(target=PrinterI.starter,daemon=True)
+    tc = Thread(target=SliceCoonection.starter,daemon=True)
     tc.start()
 
     app = QApplication(sys.argv)
@@ -96,5 +96,5 @@ if __name__ == '__main__':
     demo = Display()
     demo.show()
     if app.exec_() == 0:
-        PrinterI().stop_threads = True
+        SliceCoonection().stop_threads = True
         sys.exit(app.exec_())

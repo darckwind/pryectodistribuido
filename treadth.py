@@ -6,7 +6,7 @@ global_ser = serial.Serial(port='COM7', baudrate=9600, timeout=0, write_timeout=
 
 
 
-class comunication():
+class Conection():
 
    def data_sender(self):
 
@@ -36,7 +36,7 @@ class main():
 
    try:
       #se crean hilos para paralelizar el trabajo
-      t = Thread(target=comunication().data_sender)
+      t = Thread(target=Conection().data_sender)
       t.start()
    except:
       print("Error: unable to start thread")
