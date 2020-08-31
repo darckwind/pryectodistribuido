@@ -5,22 +5,26 @@ from PyQt5.QtCore import Qt
 
 
 class SliceCoonection(Comunication.Birateral):
+
     action = False
     stop_threads = False
+
+
     def __init__(self):
         super().__init__()
         self.data=""
 
+    #actualiza el parametro action
     def set_action(self,comand):
         SliceCoonection.action = comand
-        print(self.action)
 
 
     def comunicationBilateral(self, s,current=None):
         self.data = s
-        print(self.action)
+        #envia la data formateada al updatelcd para actualizar la pantalla de monitoreo
         Display.updateLCD(self.data)
         time.sleep(0.5)
+        #retorna el valor correspondioente para la activacion del actuador al cliente
         if self.action:
             return "2"
         else:
@@ -34,6 +38,9 @@ class SliceCoonection(Comunication.Birateral):
             adapter.add(object, communicator.stringToIdentity("SimplePrinter"))
             adapter.activate()
             communicator.waitForShutdown()
+
+
+    #inicia el metodo connector
     @staticmethod
     def starter():
         SliceCoonection.connector()
@@ -43,6 +50,9 @@ class SliceCoonection(Comunication.Birateral):
 
 class Display(QWidget):
 
+
+
+    #inicio de componentes para la pantalla de monitoreo y control
     def __init__(self):
         super().__init__()
         self.resize(600, 200)
@@ -67,13 +77,14 @@ class Display(QWidget):
         self.button.clicked.connect(self.launch)
         self.button_stop.clicked.connect(self.stop_launch)
         self.setLayout(layout)
-
+    #encargada de actualizar la informacion de la pantalla que es resivida con formato value@value@value, para lo cual se hace split del string para asi obtener cada dato
     def updateLCD(event):
         if event != "" and len(str(event).split("@"))==3:
             lcd_humedad.display(str(event).split("@")[0])
             lcd_temp_hamb.display(str(event).split("@")[1])
             lcd_temp_camara.display(str(event).split("@")[2])
 
+    #funciones encargadas de manejar el actuador
     def launch(self):
         SliceCoonection().set_action(True)
 
@@ -84,9 +95,10 @@ class Display(QWidget):
 if __name__ == '__main__':
 
 
-
+    #inicia el hilo de comunicacion del servidor
     tc = Thread(target=SliceCoonection.starter,daemon=True)
     tc.start()
+
 
     app = QApplication(sys.argv)
     lcd_humedad = QLCDNumber()
@@ -95,6 +107,9 @@ if __name__ == '__main__':
 
     demo = Display()
     demo.show()
+
+
+    #destruye el hilo al momento de cerrar la ventana
     if app.exec_() == 0:
-        SliceCoonection().stop_threads = True
+        tc.stop()
         sys.exit(app.exec_())
