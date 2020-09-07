@@ -26,9 +26,9 @@ class SliceCoonection(Comunication.Birateral):
         time.sleep(0.5)
         #retorna el valor correspondioente para la activacion del actuador al cliente
         if self.action:
-            return "2"
-        else:
             return "1"
+        else:
+            return "2"
 
     @staticmethod
     def connector():

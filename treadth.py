@@ -20,7 +20,7 @@ class Conection():
                #local
                #base = communicator.stringToProxy("SimplePrinter:default -p 11000")
                #torre
-               base = communicator.stringToProxy("SimplePrinter:tcp -h 26.149.0.206 -p 8000")
+               base = communicator.stringToProxy("SimplePrinter:tcp -h 26.149.0.206 -p 11000")
                #mac
                #base = communicator.stringToProxy("SimplePrinter:tcp -h 25.5.222.9 -p 12000")
                com_bilateral = Comunication.BirateralPrx.checkedCast(base)
