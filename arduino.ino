@@ -1,24 +1,25 @@
-#include <DHT11.h>
+#include "DHT.h"
+#define DHTPIN 2
+#define DHTTYPE DHT11
 
+DHT dht(DHTPIN, DHTTYPE);
 
-int pinRelay = 5;
-int pin = 4;
+int pinRelay = 3;
 
+const int analogInPin = A0;
+int sensorValue = 0;
 
-DHT11 dht11(pin);
 
 void setup() {
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pinRelay, OUTPUT);
   while (!Serial);
+  dht.begin();
 }
 
-// the loop function runs over and over again forever
 void loop() {
-
-
-  if (Serial.available()){
+    if (Serial.available()){
       int state = Serial.parseInt();
       if (state == 1){
           digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on
@@ -31,26 +32,16 @@ void loop() {
     }
 
 
-  int err;
+  sensorValue = analogRead(analogInPin);
+  //Serial.println(sensorValue);
+  float temp_analog = (1.3125*(sensorValue-428)+3.3);
   float temp, humi;
   String dht11_final;
-  if((err=dht11.read(humi, temp))==0)
-  {
-    dht11_final = String(humi)+"@"+String(temp);
-
-  }
-  else
-  {
-    dht11_final = String(000)+"@"+String(000);
-  }
-  delay(DHT11_RETRY_DELAY); //delay for reread
-
-
-  int sensor_pt100 = random(1,455);
-
-
-
-  String final_data = dht11_final +"@"+ String(sensor_pt100);
+  humi = dht.readHumidity();
+  temp = dht.readTemperature();
+  dht11_final = String(humi)+"@"+String(temp);
+  String final_data = dht11_final +"@"+ String(temp_analog);
   Serial.println(final_data);
+  delay(1000);
 
 }

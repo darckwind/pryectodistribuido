@@ -31,7 +31,7 @@ class Conection():
                # envio de los datos de sensoires
                # manda los valorores de los sensores por mediop de comunicacion serial con un foramto on@12@34
                com_bilateral.comunicationBilateral(str(response)[2:][:-5])
-               #print(str(response)[2:][:-5])
+
                com_bilateral.comunicationBilateral("")
                # recive el dato y lo pasa a la placa por convercion a byte para la comunicacion serial
                global_ser.write(str(com_bilateral.comunicationBilateral("")).encode())
