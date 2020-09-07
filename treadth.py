@@ -4,7 +4,7 @@ from threading import Thread, Event, Lock
 
 
 #variable gloval de comunicacion por protocolo serial con placa de comunicacion
-global_ser = serial.Serial(port='COM7', baudrate=9600, timeout=0, write_timeout=0)
+global_ser = serial.Serial(port='COM8', baudrate=9600, timeout=0, write_timeout=0)
 
 class Conection():
 
@@ -18,9 +18,9 @@ class Conection():
 
             with Ice.initialize(sys.argv) as communicator:
                #local
-               base = communicator.stringToProxy("SimplePrinter:default -p 11000")
+               #base = communicator.stringToProxy("SimplePrinter:default -p 11000")
                #torre
-               #base = communicator.stringToProxy("SimplePrinter:tcp -h 25.89.209.150 -p 12000")
+               base = communicator.stringToProxy("SimplePrinter:tcp -h 26.149.0.206 -p 8000")
                #mac
                #base = communicator.stringToProxy("SimplePrinter:tcp -h 25.5.222.9 -p 12000")
                com_bilateral = Comunication.BirateralPrx.checkedCast(base)
