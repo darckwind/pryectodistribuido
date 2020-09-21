@@ -17,12 +17,9 @@ class Conection():
          if response is not None:
 
             with Ice.initialize(sys.argv) as communicator:
-               #local
-               #base = communicator.stringToProxy("SimplePrinter:default -p 11000")
                #torre
                base = communicator.stringToProxy("SimplePrinter:tcp -h 26.149.0.206 -p 11000")
-               #mac
-               #base = communicator.stringToProxy("SimplePrinter:tcp -h 25.5.222.9 -p 12000")
+               #se instancia coneccion con ice
                com_bilateral = Comunication.BirateralPrx.checkedCast(base)
 
                if not com_bilateral:
@@ -30,9 +27,13 @@ class Conection():
 
                # envio de los datos de sensoires
                # manda los valorores de los sensores por mediop de comunicacion serial con un foramto on@12@34
+               # mediante la instanciacion de comunicationBilateral precente en el servidor
                com_bilateral.comunicationBilateral(str(response)[2:][:-5])
 
+
+               #se manda un balor en blanco con finalidad de actulizar
                com_bilateral.comunicationBilateral("")
+
                # recive el dato y lo pasa a la placa por convercion a byte para la comunicacion serial
                global_ser.write(str(com_bilateral.comunicationBilateral("")).encode())
 
