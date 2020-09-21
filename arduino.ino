@@ -34,7 +34,7 @@ void loop() {
           digitalWrite(pinRelay, HIGH);
         }
         if (state == 2){
-          digitalWrite(LED_BUILTIN, LOW);   // turn the actuador on
+          digitalWrite(LED_BUILTIN, LOW);   // turn the actuador off
           digitalWrite(pinRelay, LOW);
         }
     }
