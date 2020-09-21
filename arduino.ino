@@ -6,6 +6,14 @@ DHT dht(DHTPIN, DHTTYPE);
 
 int pinRelay = 3;
 
+#include "DHT.h"
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+int pinRelay = 3;
+
 const int analogInPin = A0;
 int sensorValue = 0;
 
@@ -22,18 +30,17 @@ void loop() {
     if (Serial.available()){
       int state = Serial.parseInt();
       if (state == 1){
-          digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on
+          digitalWrite(LED_BUILTIN, HIGH);   // turn the actuador on
           digitalWrite(pinRelay, HIGH);
         }
         if (state == 2){
-          digitalWrite(LED_BUILTIN, LOW);   // turn the LED on
+          digitalWrite(LED_BUILTIN, LOW);   // turn the actuador on
           digitalWrite(pinRelay, LOW);
         }
     }
 
 
   sensorValue = analogRead(analogInPin);
-  //Serial.println(sensorValue);
   float temp_analog = (1.3125*(sensorValue-428)+3.3);
   float temp, humi;
   String dht11_final;
